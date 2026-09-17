@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary App</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            text-align: left;
+        }
+
+        #result h2 {
+            margin-bottom: 10px;
+        }
+
+        #result p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="head">
+        <pre> </pre><img id="mlogo" src="..\nlogo.png" height="60" width="60" alt="School Logo"> <pre> </pre>
+        <a href="..\index.html"><button>Home</button></a> <pre>      </pre>
+        <a href="..\daily_routine.html"><button>Daily Routine</button></a> <pre>      </pre>
+        <a href="..\e_books.html"><button>E-Books</button></a> <pre>      </pre>
+        <a href="..\Tools.html"><button>Tools</button></a> <pre>      </pre>
+    </div>
+    <div class="container">
+        <h1>Dictionary</h1>
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Enter a word">
+            <button id="search-button">Search</button>
+        </div>
+        <div id="result">
+            <h2 id="word"></h2>
+            <p id="definition"></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('search-button').addEventListener('click', function() {
+            const word = document.getElementById('search-input').value;
+            if (word === '') {
+                alert('Please enter a word');
+                return;
+            }
+
+            const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.title === "No Definitions Found") {
+                        document.getElementById('word').innerText = 'No Definitions Found';
+                        document.getElementById('definition').innerText = '';
+                    } else {
+                        const definition = data[0].meanings[0].definitions[0].definition;
+                        document.getElementById('word').innerText = word;
+                        document.getElementById('definition').innerText = definition;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('word').innerText = 'Error';
+                    document.getElementById('definition').innerText = 'Could not fetch the definition. Please try again later.';
+                    console.error('Error fetching the dictionary API:', error);
+                });
+        });
+    </script>
+</body>
+</html>
